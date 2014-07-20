@@ -10,7 +10,7 @@
  
  
     <js-module src="www/parseextension.js" name="ParseExtension">
-        <clobbers target="window.parse" />
+        <clobbers target="window.parseObject" />
     </js-module>
  
     <!-- android -->
