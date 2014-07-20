@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="com.conzole.parseplugin"
+		version="1.0.0">
+    <name>ParsePlugin</name>
+    <description>Sample PhoneGap Calendar Plugin</description>
+    <license>MIT</license>
+    <keywords>phonegap,parse</keywords>
+ 
+ 
+    <js-module src="www/parseextension.js" name="ParseExtension">
+        <clobbers target="window.parse" />
+    </js-module>
+ 
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="ParsePlugin">
+                <param name="android-package" value="com.conzole.parseplugin.ParseExtension"/>
+            </feature>
+        </config-file>
+ 
+		<config-file target="AndroidManifest.xml" parent="/*">
+			<uses-permission android:name="android.permission.INTERNET"/>
+		</config-file>
+	
+        <source-file src="src/android/ParseExtension.java" target-dir="src/com/conzole/parseplugin" />      
+     </platform>          
+</plugin>
