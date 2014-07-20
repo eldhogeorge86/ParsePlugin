@@ -48,28 +48,28 @@ public class ParseExtension extends CordovaPlugin {
 			
 			if (action.equals("signup")) {
 				JSONObject arg_object = args.getJSONObject(0);
-				singUp(arg_object.getString("user"), arg_object.getString("password"), callbackContext)
+				singUp(arg_object.getString("user"), arg_object.getString("password"), callbackContext);
 				return true;
 			}
 			
 			if (action.equals("login")) {
 				JSONObject arg_object = args.getJSONObject(0);
-				logIn(arg_object.getString("user"), arg_object.getString("password"), callbackContext)
+				logIn(arg_object.getString("user"), arg_object.getString("password"), callbackContext);
 				return true;
 			}
 			
 			if (action.equals("logout")) {
-				logout(callbackContext)
+				logout(callbackContext);
 				return true;
 			}
 			
 			if (action.equals("isLoggedIn")) {
-				isLoggedIn(callbackContext)
+				isLoggedIn(callbackContext);
 				return true;
 			}
 			
 			if (action.equals("isFbLinked")) {
-				isFbLinked(callbackContext)
+				isFbLinked(callbackContext);
 				return true;
 			}
 			
