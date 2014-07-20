@@ -11,6 +11,7 @@ import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.parse.ParseException;
+import com.parse.SignUpCallback;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,6 +40,39 @@ public class ParseExtension extends CordovaPlugin {
 		        callbackContext.success();
 		        return true;
 			}
+			
+			if (action.equals("fbLogin")) {
+				fbLogin(cordova.getActivity(), callbackContext);
+				return true;
+			}
+			
+			if (action.equals("signup")) {
+				JSONObject arg_object = args.getJSONObject(0);
+				singUp(arg_object.getString("user"), arg_object.getString("password"), callbackContext)
+				return true;
+			}
+			
+			if (action.equals("login")) {
+				JSONObject arg_object = args.getJSONObject(0);
+				logIn(arg_object.getString("user"), arg_object.getString("password"), callbackContext)
+				return true;
+			}
+			
+			if (action.equals("logout")) {
+				logout(callbackContext)
+				return true;
+			}
+			
+			if (action.equals("isLoggedIn")) {
+				isLoggedIn(callbackContext)
+				return true;
+			}
+			
+			if (action.equals("isFbLinked")) {
+				isFbLinked(callbackContext)
+				return true;
+			}
+			
 			callbackContext.error("Invalid action");
 		    return false;
 		} catch(Exception e) {
@@ -49,5 +83,93 @@ public class ParseExtension extends CordovaPlugin {
 		
 	}
 
+	private void logIn(String userName, String password, CallbackContext callbackContext){
+		ParseUser.logInInBackground(userName, password, new LogInCallback() {
+			  public void done(ParseUser user, ParseException e) {
+			    if (user != null) {
+			      // Hooray! The user is logged in.
+			    	Log.d(TAG, "User logged in!");
+		  		    callbackContext.success();
+			    } else {
+			      // Signup failed. Look at the ParseException to see what happened.
+			    	Log.d(TAG, "Exception: " + e.getMessage());
+				    callbackContext.error(e.getMessage());
+			    }
+			  }
+			});
+	}
 	
+	private void isLoggedIn(CallbackContext callbackContext){
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		JSONObject ret = new JSONObject();
+		if (currentUser != null) {
+		  // do stuff with the user
+			ret.put("exists", true);
+		} else {
+		  // show the signup or login screen
+			ret.put("exists", false);
+		}
+		callbackContext.success(ret);
+	}
+	
+	private void logOut(CallbackContext callbackContext){
+		ParseUser.logOut();
+		callbackContext.success();
+	}
+	
+	private void isFbLinked(CallbackContext callbackContext){
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		JSONObject ret = new JSONObject();
+		if (currentUser != null) {
+			  // do stuff with the user
+				if (ParseFacebookUtils.isLinked(user)) {
+					ret.put("linked", true);
+				} else{
+					ret.put("linked", false);
+				}
+				
+			} else {
+			  // show the signup or login screen
+				ret.put("linked", false);
+			}
+			callbackContext.success(ret);
+	}
+	
+	private void fbLogin(Activity parent, CallbackContext callbackContext){
+		ParseFacebookUtils.logIn(parent, new LogInCallback() {
+	  		  @Override
+	  		  public void done(ParseUser user, ParseException err) {
+	  		    if (user == null) {
+	  		      Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
+	  		      callbackContext.error("User cancelled fb login")
+	  		    } else if (user.isNew()) {
+	  		      Log.d(TAG, "User signed up and logged in through Facebook!");
+	  		      callbackContext.success();
+	  		    } else {
+	  		      Log.d(TAG, "User logged in through Facebook!");
+	  		      callbackContext.success();
+	  		    }
+	  		  }
+	  		});
+	}
+	
+	private void signUp(String userName, String password, CallbackContext callbackContext){
+		ParseUser user = new ParseUser();
+    	user.setUsername(userName);
+    	user.setPassword(password);
+    	user.setEmail(userName);
+    	 
+    	user.signUpInBackground(new SignUpCallback() {
+    	  public void done(ParseException e) {
+    	    if (e == null) {
+    	      // Hooray! Let them use the app now.
+    	    	callbackContext.success();
+    	    } else {
+    	      // Sign up didn't succeed. Look at the ParseException
+    	      // to figure out what went wrong
+    	    	callbackContext.error(e.getMessage());
+    	    }
+    	  }
+    	});
+	}
 }
