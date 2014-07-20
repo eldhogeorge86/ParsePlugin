@@ -1,4 +1,4 @@
-var parse = {
+var parseObject = {
 
 	initialize : function(successCallback, errorCallback){
 		cordova.exec(
@@ -88,4 +88,4 @@ var parse = {
 	}	
 }
 
-module.exports = parse;
+module.exports = parseObject;
