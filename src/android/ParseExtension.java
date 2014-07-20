@@ -25,7 +25,7 @@ public class ParseExtension extends CordovaPlugin {
 	private final String TAG = "ParseExtension";
 	
 	@Override
-	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 		
 		try {
 			Log.d(TAG, "action:" + action);
@@ -48,7 +48,7 @@ public class ParseExtension extends CordovaPlugin {
 			
 			if (action.equals("signup")) {
 				JSONObject arg_object = args.getJSONObject(0);
-				singUp(arg_object.getString("user"), arg_object.getString("password"), callbackContext);
+				signUp(arg_object.getString("user"), arg_object.getString("password"), callbackContext);
 				return true;
 			}
 			
@@ -59,7 +59,7 @@ public class ParseExtension extends CordovaPlugin {
 			}
 			
 			if (action.equals("logout")) {
-				logout(callbackContext);
+				logOut(callbackContext);
 				return true;
 			}
 			
@@ -83,7 +83,7 @@ public class ParseExtension extends CordovaPlugin {
 		
 	}
 
-	private void logIn(String userName, String password, CallbackContext callbackContext){
+	private void logIn(String userName, String password, final CallbackContext callbackContext){
 		ParseUser.logInInBackground(userName, password, new LogInCallback() {
 			  public void done(ParseUser user, ParseException e) {
 			    if (user != null) {
@@ -99,30 +99,36 @@ public class ParseExtension extends CordovaPlugin {
 			});
 	}
 	
-	private void isLoggedIn(CallbackContext callbackContext){
+	private void isLoggedIn(final CallbackContext callbackContext){
 		ParseUser currentUser = ParseUser.getCurrentUser();
-		JSONObject ret = new JSONObject();
-		if (currentUser != null) {
-		  // do stuff with the user
-			ret.put("exists", true);
-		} else {
-		  // show the signup or login screen
-			ret.put("exists", false);
+		try {
+			JSONObject ret = new JSONObject();
+			if (currentUser != null) {
+			  // do stuff with the user
+				ret.put("exists", true);
+			} else {
+			  // show the signup or login screen
+				ret.put("exists", false);
+			}
+			callbackContext.success(ret);
+		} catch (JSONException e) {
+			Log.e(TAG, "Bad thing happened with profile json", e);
+			callbackContext.error("json exception");
 		}
-		callbackContext.success(ret);
 	}
 	
-	private void logOut(CallbackContext callbackContext){
+	private void logOut(final CallbackContext callbackContext){
 		ParseUser.logOut();
 		callbackContext.success();
 	}
 	
-	private void isFbLinked(CallbackContext callbackContext){
+	private void isFbLinked(final CallbackContext callbackContext){
 		ParseUser currentUser = ParseUser.getCurrentUser();
-		JSONObject ret = new JSONObject();
-		if (currentUser != null) {
+		try {
+			JSONObject ret = new JSONObject();
+			if (currentUser != null) {
 			  // do stuff with the user
-				if (ParseFacebookUtils.isLinked(user)) {
+				if (ParseFacebookUtils.isLinked(currentUser)) {
 					ret.put("linked", true);
 				} else{
 					ret.put("linked", false);
@@ -133,9 +139,13 @@ public class ParseExtension extends CordovaPlugin {
 				ret.put("linked", false);
 			}
 			callbackContext.success(ret);
+		} catch (JSONException e) {
+			Log.e(TAG, "Bad thing happened with profile json", e);
+			callbackContext.error("json exception");
+		}
 	}
 	
-	private void fbLogin(Activity parent, CallbackContext callbackContext){
+	private void fbLogin(Activity parent, final CallbackContext callbackContext){
 		ParseFacebookUtils.logIn(parent, new LogInCallback() {
 	  		  @Override
 	  		  public void done(ParseUser user, ParseException err) {
@@ -153,7 +163,7 @@ public class ParseExtension extends CordovaPlugin {
 	  		});
 	}
 	
-	private void signUp(String userName, String password, CallbackContext callbackContext){
+	private void signUp(String userName, String password, final CallbackContext callbackContext){
 		ParseUser user = new ParseUser();
     	user.setUsername(userName);
     	user.setPassword(password);
