@@ -14,6 +14,10 @@ import com.parse.ParseException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 public class ParseExtension extends CordovaPlugin {
 
@@ -27,7 +31,7 @@ public class ParseExtension extends CordovaPlugin {
 			cordova.setActivityResultCallback(this);
 			
 			if (action.equals("initialize")) {
-				Parse.initialize(this, "KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke",
+				Parse.initialize(cordova.getActivity(), "KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke",
 						"5tAzG9eU6r1xrUiarLyrw9CbDH8hIZDj9JEqNx0u");
 		        
 		        ParseFacebookUtils.initialize("1459231424341380");
