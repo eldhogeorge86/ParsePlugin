@@ -6,6 +6,12 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
+import com.parse.ParseException;
+
 import android.app.Activity;
 import android.content.Intent;
 
