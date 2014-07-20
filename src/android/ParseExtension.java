@@ -173,10 +173,12 @@ public class ParseExtension extends CordovaPlugin {
     	  public void done(ParseException e) {
     	    if (e == null) {
     	      // Hooray! Let them use the app now.
+    	    	Log.d(TAG, "signup success");
     	    	callbackContext.success();
     	    } else {
     	      // Sign up didn't succeed. Look at the ParseException
     	      // to figure out what went wrong
+    	    	Log.d(TAG, "signup" + e.getMessage());
     	    	callbackContext.error(e.getMessage());
     	    }
     	  }
