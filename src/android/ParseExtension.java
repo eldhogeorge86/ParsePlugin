@@ -141,7 +141,7 @@ public class ParseExtension extends CordovaPlugin {
 	  		  public void done(ParseUser user, ParseException err) {
 	  		    if (user == null) {
 	  		      Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
-	  		      callbackContext.error("User cancelled fb login")
+	  		      callbackContext.error("User cancelled fb login");
 	  		    } else if (user.isNew()) {
 	  		      Log.d(TAG, "User signed up and logged in through Facebook!");
 	  		      callbackContext.success();
