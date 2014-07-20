@@ -17,11 +17,33 @@ import android.content.Intent;
 
 public class ParseExtension extends CordovaPlugin {
 
+	private final String TAG = "ParseExtension";
+	
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		
-		return true;
+		try {
+			Log.d(TAG, "action:" + action);
+			cordova.setActivityResultCallback(this);
+			
+			if (action.equals("initialize")) {
+				Parse.initialize(this, "KtEEaus447TpIR7NTGJVQs3Oj982qM2Ccz8oEhke",
+						"5tAzG9eU6r1xrUiarLyrw9CbDH8hIZDj9JEqNx0u");
+		        
+		        ParseFacebookUtils.initialize("1459231424341380");
+		        
+		        callbackContext.success();
+		        return true;
+			}
+			callbackContext.error("Invalid action");
+		    return false;
+		} catch(Exception e) {
+			Log.d(TAG, "Exception: " + e.getMessage());
+		    callbackContext.error(e.getMessage());
+		    return false;
+		} 
 		
 	}
 
+	
 }
