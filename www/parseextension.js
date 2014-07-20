@@ -4,7 +4,7 @@ var parseObject = {
 		cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
-            'ParseExtension', // mapped to our native Java class called "ParseExtension"
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
             'initialize', // with this action name
             [{                  // and this array of custom arguments to create our entry
                 "appid": "test1",
@@ -17,7 +17,7 @@ var parseObject = {
 		cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
-            'ParseExtension', // mapped to our native Java class called "ParseExtension"
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
             'fbLogin', // with this action name
             [{                  // and this array of custom arguments to create our entry
                 
@@ -29,7 +29,7 @@ var parseObject = {
 		cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
-            'ParseExtension', // mapped to our native Java class called "ParseExtension"
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
             'signup', // with this action name
             [{                  // and this array of custom arguments to create our entry
                 "user" : user,
@@ -42,7 +42,7 @@ var parseObject = {
 		cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
-            'ParseExtension', // mapped to our native Java class called "ParseExtension"
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
             'login', // with this action name
             [{                  // and this array of custom arguments to create our entry
                 "user" : user,
@@ -55,7 +55,7 @@ var parseObject = {
 		cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
-            'ParseExtension', // mapped to our native Java class called "ParseExtension"
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
             'logout', // with this action name
             [{                  // and this array of custom arguments to create our entry
                 
@@ -67,7 +67,7 @@ var parseObject = {
 		cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
-            'ParseExtension', // mapped to our native Java class called "ParseExtension"
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
             'isLoggedIn', // with this action name
             [{                  // and this array of custom arguments to create our entry
                 
@@ -79,7 +79,7 @@ var parseObject = {
 		cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
-            'ParseExtension', // mapped to our native Java class called "ParseExtension"
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
             'isFbLinked', // with this action name
             [{                  // and this array of custom arguments to create our entry
                 
