@@ -93,8 +93,8 @@ public class ParseExtension extends CordovaPlugin {
 						Log.d(TAG, "User logged in!");
 						callbackContext.success(ret);
 					}
-					catch(JSONException e) {
-						Log.e(TAG, "Bad thing happened with profile json", e);
+					catch(JSONException je) {
+						Log.e(TAG, "Bad thing happened with profile json", je);
 						callbackContext.error("json exception");
 					}
 			    } else {
@@ -187,8 +187,8 @@ public class ParseExtension extends CordovaPlugin {
 					Log.d(TAG, "signup success");
 					callbackContext.success(ret);
 				}
-				catch(JSONException e) {
-					Log.e(TAG, "Bad thing happened with profile json", e);
+				catch(JSONException je) {
+					Log.e(TAG, "Bad thing happened with profile json", je);
 					callbackContext.error("json exception");
 				}
     	    } else {
