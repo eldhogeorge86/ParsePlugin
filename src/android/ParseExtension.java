@@ -171,7 +171,7 @@ public class ParseExtension extends CordovaPlugin {
 	  		});
 	}
 	
-	private void signUp(String name, String userName, String password, final CallbackContext callbackContext){
+	private void signUp(final String name, String userName, String password, final CallbackContext callbackContext){
 		ParseUser user = new ParseUser();
     	user.setUsername(userName);
     	user.setPassword(password);
