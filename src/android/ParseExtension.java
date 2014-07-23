@@ -105,6 +105,7 @@ public class ParseExtension extends CordovaPlugin {
 			JSONObject ret = new JSONObject();
 			if (currentUser != null) {
 			  // do stuff with the user
+			    ret.put("name", currentUser.getString("name"));
 				ret.put("exists", true);
 			} else {
 			  // show the signup or login screen
