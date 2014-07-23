@@ -48,7 +48,7 @@ public class ParseExtension extends CordovaPlugin {
 			
 			if (action.equals("signup")) {
 				JSONObject arg_object = args.getJSONObject(0);
-				signUp(arg_object.getString("user"), arg_object.getString("password"), callbackContext);
+				signUp(arg_object.getString("name"),arg_object.getString("user"), arg_object.getString("password"), callbackContext);
 				return true;
 			}
 			
@@ -163,12 +163,13 @@ public class ParseExtension extends CordovaPlugin {
 	  		});
 	}
 	
-	private void signUp(String userName, String password, final CallbackContext callbackContext){
+	private void signUp(String name, String userName, String password, final CallbackContext callbackContext){
 		ParseUser user = new ParseUser();
     	user.setUsername(userName);
     	user.setPassword(password);
     	user.setEmail(userName);
-    	 
+    	user.put("name", name);
+		
     	user.signUpInBackground(new SignUpCallback() {
     	  public void done(ParseException e) {
     	    if (e == null) {
