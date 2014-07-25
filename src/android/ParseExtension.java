@@ -9,6 +9,7 @@ import org.json.JSONException;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.ParseException;
@@ -57,6 +58,12 @@ public class ParseExtension extends CordovaPlugin {
 			if (action.equals("updateUser")) {
 				JSONObject arg_object = args.getJSONObject(0);
 				updateUser(arg_object, callbackContext);
+				return true;
+			}
+			
+			if (action.equals("askQuestion")) {
+				JSONObject arg_object = args.getJSONObject(0);
+				askQuestion(arg_object, callbackContext);
 				return true;
 			}
 			
@@ -224,6 +231,72 @@ public class ParseExtension extends CordovaPlugin {
     	} catch (JSONException e1) {
     		Log.d(TAG, "JSONException" + e1.getMessage());
 	    	callbackContext.error(e1.getMessage());
+		}
+	}
+	
+	private void askQuestion(JSONObject arg_object, final CallbackContext callbackContext){
+		
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if(currentUser != null){
+			
+			try {
+				ParseObject question = new ParseObject("Question");
+				question.put("user", currentUser);
+				question.put("data", arg_object.getString("data"));
+				
+				if(arg_object.has("answer1")){
+					ParseObject answer1 = new ParseObject("Answer");
+					answer1.put("text", arg_object.getString("answer1"));
+					answer1.put("count", 0);
+					question.put("answer1", answer1);
+	    		}
+				
+				if(arg_object.has("answer2")){
+					ParseObject answer2 = new ParseObject("Answer");
+					answer2.put("text", arg_object.getString("answer2"));
+					answer2.put("count", 0);
+					question.put("answer2", answer2);
+	    		}
+				
+				if(arg_object.has("answer3")){
+					ParseObject answer3 = new ParseObject("Answer");
+					answer3.put("text", arg_object.getString("answer3"));
+					answer3.put("count", 0);
+					question.put("answer3", answer3);
+	    		}
+				
+				if(arg_object.has("answer4")){
+					ParseObject answer4 = new ParseObject("Answer");
+					answer4.put("text", arg_object.getString("answer4"));
+					answer4.put("count", 0);
+					question.put("answer4", answer4);
+	    		}
+				
+				if(arg_object.has("answer5")){
+					ParseObject answer5 = new ParseObject("Answer");
+					answer5.put("text", arg_object.getString("answer5"));
+					answer5.put("count", 0);
+					question.put("answer5", answer5);
+	    		}
+				
+				question.saveInBackground(new SaveCallback() {
+					
+					@Override
+					public void done(ParseException exp) {
+						if(exp == null){
+							callbackContext.success();
+						}
+						else{
+							Log.d(TAG, "ParseException" + exp.getMessage());
+					    	callbackContext.error(exp.getMessage());
+						}						
+					}
+				});
+				
+			} catch (JSONException e1) {
+				Log.d(TAG, "JSONException" + e1.getMessage());
+		    	callbackContext.error(e1.getMessage());
+			}
 		}
 	}
 	

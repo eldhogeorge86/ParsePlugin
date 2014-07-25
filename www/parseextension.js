@@ -92,7 +92,17 @@ var parseObject = {
                 
             }]
         ); 
-	}	
+	},
+
+	askQuestion : function(questionObject, successCallback, errorCallback){
+		cordova.exec(
+            successCallback, // success callback function
+            errorCallback, // error callback function
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
+            'askQuestion', // with this action name
+            [ questionObject ]
+        ); 
+	},
 }
 
 module.exports = parseObject;
