@@ -9,8 +9,10 @@ import org.json.JSONException;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import android.app.Activity;
@@ -48,7 +50,13 @@ public class ParseExtension extends CordovaPlugin {
 			
 			if (action.equals("signup")) {
 				JSONObject arg_object = args.getJSONObject(0);
-				signUp(arg_object.getString("name"),arg_object.getString("user"), arg_object.getString("password"), callbackContext);
+				signUp(arg_object, callbackContext);
+				return true;
+			}
+			
+			if (action.equals("updateUser")) {
+				JSONObject arg_object = args.getJSONObject(0);
+				updateUser(arg_object, callbackContext);
 				return true;
 			}
 			
@@ -87,16 +95,9 @@ public class ParseExtension extends CordovaPlugin {
 		ParseUser.logInInBackground(userName, password, new LogInCallback() {
 			  public void done(ParseUser user, ParseException e) {
 			    if (user != null) {
-					try{
-						JSONObject ret = new JSONObject();
-						ret.put("name", user.getString("name"));
-						Log.d(TAG, "User logged in!");
-						callbackContext.success(ret);
-					}
-					catch(JSONException je) {
-						Log.e(TAG, "Bad thing happened with profile json", je);
-						callbackContext.error("json exception");
-					}
+					JSONObject ret = getCurrentUser();
+					Log.d(TAG, "User logged in!");
+					callbackContext.success(ret);
 			    } else {
 			      // Signup failed. Look at the ParseException to see what happened.
 			    	Log.d(TAG, "Exception: " + e.getMessage());
@@ -109,13 +110,13 @@ public class ParseExtension extends CordovaPlugin {
 	private void isLoggedIn(final CallbackContext callbackContext){
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		try {
-			JSONObject ret = new JSONObject();
+			JSONObject ret;
 			if (currentUser != null) {
-			  // do stuff with the user
-			    ret.put("name", currentUser.getString("name"));
+				ret = getCurrentUser();
 				ret.put("exists", true);
 			} else {
 			  // show the signup or login screen
+				ret = new JSONObject();
 				ret.put("exists", false);
 			}
 			callbackContext.success(ret);
@@ -162,42 +163,133 @@ public class ParseExtension extends CordovaPlugin {
 	  		      callbackContext.error("User cancelled fb login");
 	  		    } else if (user.isNew()) {
 	  		      Log.d(TAG, "User signed up and logged in through Facebook!");
-	  		      callbackContext.success();
+	  		      JSONObject ret = getCurrentUser();
+	  		      callbackContext.success(ret);
 	  		    } else {
 	  		      Log.d(TAG, "User logged in through Facebook!");
-	  		      callbackContext.success();
+	  		      JSONObject ret = getCurrentUser();
+	  		      callbackContext.success(ret);
 	  		    }
 	  		  }
 	  		});
 	}
 	
-	private void signUp(final String name, String userName, String password, final CallbackContext callbackContext){
+	private void signUp(JSONObject arg_object, final CallbackContext callbackContext){
+	
 		ParseUser user = new ParseUser();
-    	user.setUsername(userName);
-    	user.setPassword(password);
-    	user.setEmail(userName);
-    	user.put("name", name);
+    	try {
+			user.setUsername(arg_object.getString("user"));
 		
-    	user.signUpInBackground(new SignUpCallback() {
-    	  public void done(ParseException e) {
-    	    if (e == null) {
-    	        try{
-					JSONObject ret = new JSONObject();
-					ret.put("name", name);
+	    	user.setPassword(arg_object.getString("password"));
+	    	user.setEmail(arg_object.getString("user"));
+	    	
+	    	user.put("name", arg_object.getString("name"));
+	    	user.put("fname", arg_object.getString("fname"));
+	    	user.put("lname", arg_object.getString("lname"));
+	    	user.put("dob", arg_object.getString("dob"));
+	    	user.put("country", arg_object.getString("country"));
+	    	user.put("sex", arg_object.getString("sex"));
+			
+	    	user.signUpInBackground(new SignUpCallback() {
+	    	  public void done(ParseException e) {
+	    	    if (e == null) {
+	    	    	
+	    	    	JSONObject ret = getCurrentUser();
 					Log.d(TAG, "signup success");
 					callbackContext.success(ret);
+					
+	    	    } else {
+	    	      // Sign up didn't succeed. Look at the ParseException
+	    	      // to figure out what went wrong
+	    	    	Log.d(TAG, "signup" + e.getMessage());
+	    	    	callbackContext.error(e.getMessage());
+	    	    }
+	    	  }
+	    	});
+    	} catch (JSONException e1) {
+    		Log.d(TAG, "JSONException" + e1.getMessage());
+	    	callbackContext.error(e1.getMessage());
+		}
+	}
+	
+	private void updateUser(JSONObject arg_object, final CallbackContext callbackContext){
+		
+    	try {
+    		ParseUser currentUser = ParseUser.getCurrentUser();
+    		if(arg_object.has("name")){
+    			currentUser.put("name", arg_object.getString("name"));
+    		}
+    		
+    		if(arg_object.has("fname")){
+    			currentUser.put("fname", arg_object.getString("fname"));
+    		}
+    		if(arg_object.has("lname")){
+    			currentUser.put("lname", arg_object.getString("lname"));
+    		}
+    		if(arg_object.has("dob")){
+    			currentUser.put("dob", arg_object.getString("dob"));
+    		}
+    		if(arg_object.has("country")){
+    			currentUser.put("country", arg_object.getString("country"));
+    		}
+    		if(arg_object.has("sex")){
+    			currentUser.put("sex", arg_object.getString("sex"));
+    		}
+    		
+    		currentUser.saveInBackground(new SaveCallback() {
+				
+				@Override
+				public void done(ParseException exp) {
+
+					if(exp == null){
+						JSONObject ret = getCurrentUser();
+						Log.d(TAG, "save success");
+						callbackContext.success(ret);
+					}
+					else{
+					
+						Log.d(TAG, "save failed" + exp.getMessage());
+		    	    	callbackContext.error(exp.getMessage());
+					}
 				}
-				catch(JSONException je) {
-					Log.e(TAG, "Bad thing happened with profile json", je);
-					callbackContext.error("json exception");
-				}
-    	    } else {
-    	      // Sign up didn't succeed. Look at the ParseException
-    	      // to figure out what went wrong
-    	    	Log.d(TAG, "signup" + e.getMessage());
-    	    	callbackContext.error(e.getMessage());
-    	    }
-    	  }
-    	});
+			});
+
+    	} catch (JSONException e1) {
+    		Log.d(TAG, "JSONException" + e1.getMessage());
+	    	callbackContext.error(e1.getMessage());
+		}
+	}
+	
+	private JSONObject getCurrentUser(){
+		
+		JSONObject ret = new JSONObject();
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if(currentUser != null){
+			ParseQuery<ParseUser> query = ParseUser.getQuery();
+			try {
+				ParseUser dbUser = query.get(currentUser.getObjectId());
+				
+				ret.put("oid", dbUser.getObjectId());
+				ret.put("user", dbUser.getUsername());
+				ret.put("email", dbUser.getEmail());
+				ret.put("fbid", dbUser.getString("fbid"));
+				ret.put("name", dbUser.getString("name"));
+				ret.put("fname", dbUser.getString("fname"));
+				ret.put("lname", dbUser.getString("lname"));
+				ret.put("dob", dbUser.getString("dob"));
+				ret.put("country", dbUser.getString("country"));
+				ret.put("city", dbUser.getString("city"));				
+				ret.put("sex", dbUser.getString("sex"));
+				ret.put("isNew", dbUser.isNew()); 
+				ret.put("emailVerified", dbUser.getBoolean("emailVerified"));
+				
+			} catch (ParseException e) {
+				Log.e(TAG, "ParseException", e);
+			} catch (JSONException e) {
+				Log.e(TAG, "JSONException", e);
+			}
+		}	
+	
+		return ret;
 	}
 }
