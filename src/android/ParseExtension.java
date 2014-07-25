@@ -183,12 +183,27 @@ public class ParseExtension extends CordovaPlugin {
 	    	user.setPassword(arg_object.getString("password"));
 	    	user.setEmail(arg_object.getString("email"));
 	    	
-	    	user.put("name", arg_object.getString("name"));
-	    	user.put("fname", arg_object.getString("fname"));
-	    	user.put("lname", arg_object.getString("lname"));
-	    	user.put("dob", arg_object.getString("dob"));
-	    	user.put("country", arg_object.getString("country"));
-	    	user.put("sex", arg_object.getString("sex"));
+	    	if(arg_object.has("name")){
+	    		user.put("name", arg_object.getString("name"));
+	    	}
+	    	if(arg_object.has("fname")){
+	    		user.put("fname", arg_object.getString("fname"));
+	    	}
+	    	if(arg_object.has("lname")){
+	    		user.put("lname", arg_object.getString("lname"));
+	    	}
+	    	if(arg_object.has("dob")){
+	    		user.put("dob", arg_object.getString("dob"));
+	    	}
+	    	if(arg_object.has("country")){
+	    		user.put("country", arg_object.getString("country"));
+	    	}
+	    	if(arg_object.has("city")){
+	    		user.put("city", arg_object.getString("city"));
+	    	}
+	    	if(arg_object.has("sex")){
+	    		user.put("sex", arg_object.getString("sex"));
+	    	}
 			
 	    	user.signUpInBackground(new SignUpCallback() {
 	    	  public void done(ParseException e) {
