@@ -178,10 +178,10 @@ public class ParseExtension extends CordovaPlugin {
 	
 		ParseUser user = new ParseUser();
     	try {
-			user.setUsername(arg_object.getString("user"));
+			user.setUsername(arg_object.getString("email"));
 		
 	    	user.setPassword(arg_object.getString("password"));
-	    	user.setEmail(arg_object.getString("user"));
+	    	user.setEmail(arg_object.getString("email"));
 	    	
 	    	user.put("name", arg_object.getString("name"));
 	    	user.put("fname", arg_object.getString("fname"));
