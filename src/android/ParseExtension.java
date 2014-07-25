@@ -1,11 +1,14 @@
 package com.conzole.parseplugin;
  
+import java.util.List;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
@@ -67,6 +70,11 @@ public class ParseExtension extends CordovaPlugin {
 				return true;
 			}
 			
+			if (action.equals("queryQuestions")) {
+				queryQuestions(callbackContext);
+				return true;
+			}
+			
 			if (action.equals("login")) {
 				JSONObject arg_object = args.getJSONObject(0);
 				logIn(arg_object.getString("user"), arg_object.getString("password"), callbackContext);
@@ -98,6 +106,21 @@ public class ParseExtension extends CordovaPlugin {
 		
 	}
 
+	private void queryQuestions(final CallbackContext callbackContext){
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Question");
+		query.findInBackground(new FindCallback<ParseObject>() {
+		    public void done(List<ParseObject> scoreList, ParseException e) {
+		        if (e == null) {
+		            Log.d("score", "Retrieved " + scoreList.size() + " scores");
+		        } else {
+		            Log.d("score", "Error: " + e.getMessage());
+		        }
+		    }
+		});
+	}
+	
 	private void logIn(String userName, String password, final CallbackContext callbackContext){
 		ParseUser.logInInBackground(userName, password, new LogInCallback() {
 			  public void done(ParseUser user, ParseException e) {

@@ -94,6 +94,18 @@ var parseObject = {
         ); 
 	},
 
+	queryQuestions : function(successCallback, errorCallback){
+		cordova.exec(
+            successCallback, // success callback function
+            errorCallback, // error callback function
+            'ParsePlugin', // mapped to our native Java class called "ParseExtension"
+            'queryQuestions', // with this action name
+            [{                  // and this array of custom arguments to create our entry
+                
+            }]
+        ); 
+	},
+	
 	askQuestion : function(questionObject, successCallback, errorCallback){
 		cordova.exec(
             successCallback, // success callback function
