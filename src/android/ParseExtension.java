@@ -110,15 +110,64 @@ public class ParseExtension extends CordovaPlugin {
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Question");
+		query.include("user");
+		query.include("answer1");
+		query.include("answer2");
+		query.include("answer3");
+		query.include("answer4");
+		query.include("answer5");
 		query.findInBackground(new FindCallback<ParseObject>() {
-		    public void done(List<ParseObject> scoreList, ParseException e) {
+		    public void done(List<ParseObject> qList, ParseException e) {
 		        if (e == null) {
-		            Log.d("score", "Retrieved " + scoreList.size() + " scores");
+		            Log.d(TAG, "Retrieved " + qList.size() + " qs");
+		            createJsonFromQuery(qList, callbackContext);
 		        } else {
-		            Log.d("score", "Error: " + e.getMessage());
+		            Log.d(TAG, "Error: " + e.getMessage());
+		            callbackContext.error(e.getMessage());
 		        }
 		    }
 		});
+	}
+	
+	private void createJsonFromQuery(List<ParseObject> qList, final CallbackContext callbackContext){
+		try {
+			
+			JSONObject ret = new JSONObject();
+			
+			JSONArray array = new JSONArray();
+			for (ParseObject question : qList) {
+				JSONObject jsonQ = new JSONObject();
+				jsonQ.put("id", question.getString("objectId"));
+				jsonQ.put("data", question.getString("data"));
+				
+				ParseObject user = question.getParseObject("user");
+				JSONObject jsonUser = new JSONObject();
+				jsonUser.put("id", user.getString("objectId"));
+				jsonUser.put("name", user.getString("name"));
+				
+				jsonQ.put("user", jsonUser);
+				
+				if(question.has("answer1")){
+					ParseObject answer = question.getParseObject("answer1");
+					JSONObject jsonAns = new JSONObject();
+					
+					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("text", answer.getString("text"));
+					jsonAns.put("count", answer.getInt("count"));
+					
+					jsonQ.put("answer1", jsonAns);
+				}
+				array.put(jsonQ);
+			}
+			
+			ret.put("questions", array);
+			
+			callbackContext.success(ret);
+		}
+		catch (JSONException e) {
+			Log.e(TAG, "Bad thing happened with profile json", e);
+			callbackContext.error("json exception");
+		}
 	}
 	
 	private void logIn(String userName, String password, final CallbackContext callbackContext){
