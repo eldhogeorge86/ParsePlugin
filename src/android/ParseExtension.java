@@ -157,6 +157,51 @@ public class ParseExtension extends CordovaPlugin {
 					
 					jsonQ.put("answer1", jsonAns);
 				}
+				
+				if(question.has("answer2")){
+					ParseObject answer = question.getParseObject("answer2");
+					JSONObject jsonAns = new JSONObject();
+					
+					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("text", answer.getString("text"));
+					jsonAns.put("count", answer.getInt("count"));
+					
+					jsonQ.put("answer2", jsonAns);
+				}
+				
+				if(question.has("answer3")){
+					ParseObject answer = question.getParseObject("answer3");
+					JSONObject jsonAns = new JSONObject();
+					
+					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("text", answer.getString("text"));
+					jsonAns.put("count", answer.getInt("count"));
+					
+					jsonQ.put("answer3", jsonAns);
+				}
+				
+				if(question.has("answer4")){
+					ParseObject answer = question.getParseObject("answer4");
+					JSONObject jsonAns = new JSONObject();
+					
+					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("text", answer.getString("text"));
+					jsonAns.put("count", answer.getInt("count"));
+					
+					jsonQ.put("answer4", jsonAns);
+				}
+				
+				if(question.has("answer5")){
+					ParseObject answer = question.getParseObject("answer5");
+					JSONObject jsonAns = new JSONObject();
+					
+					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("text", answer.getString("text"));
+					jsonAns.put("count", answer.getInt("count"));
+					
+					jsonQ.put("answer5", jsonAns);
+				}
+				
 				array.put(jsonQ);
 			}
 			
