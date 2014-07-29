@@ -160,9 +160,7 @@ public class ParseExtension extends CordovaPlugin {
 	}
 
 	private void queryQuestions(final CallbackContext callbackContext){
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		
-		
+		ParseUser currentUser = ParseUser.getCurrentUser();		
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Question");
 		query.include("user");
@@ -171,6 +169,7 @@ public class ParseExtension extends CordovaPlugin {
 		query.include("answer3");
 		query.include("answer4");
 		query.include("answer5");
+		query.orderByDescending("updatedAt");
 		query.findInBackground(new FindCallback<ParseObject>() {
 		    public void done(List<ParseObject> qList, ParseException e) {
 		        if (e == null) {
