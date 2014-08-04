@@ -8,6 +8,10 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.facebook.Request;
+import com.facebook.Request.GraphUserCallback;
+import com.facebook.Response;
+import com.facebook.model.GraphUser;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -348,8 +352,7 @@ public class ParseExtension extends CordovaPlugin {
 	  		      callbackContext.error("User cancelled fb login");
 	  		    } else if (user.isNew()) {
 	  		      Log.d(TAG, "User signed up and logged in through Facebook!");
-	  		      JSONObject ret = getCurrentUser();
-	  		      callbackContext.success(ret);
+	  		      makeMeRequest(callbackContext);
 	  		    } else {
 	  		      Log.d(TAG, "User logged in through Facebook!");
 	  		      JSONObject ret = getCurrentUser();
@@ -357,6 +360,7 @@ public class ParseExtension extends CordovaPlugin {
 	  		    }
 	  		  }
 	  		});
+
 	}
 	
 	private void signUp(JSONObject arg_object, final CallbackContext callbackContext){
@@ -476,6 +480,43 @@ public class ParseExtension extends CordovaPlugin {
 		    	callbackContext.error(e1.getMessage());
 			}
 		}
+	}
+	
+	private void makeMeRequest(final CallbackContext callbackContext){
+		
+		Request req = Request.newMeRequest(ParseFacebookUtils.getSession(), new GraphUserCallback() {
+			
+			@Override
+			public void onCompleted(GraphUser user, Response response) {
+				
+				String fbId = user.getId();
+				String name = user.getName();
+				
+				ParseUser currentUser = ParseUser.getCurrentUser();
+				currentUser.put("fbid", fbId);
+				currentUser.put("name", name);
+				
+				currentUser.saveInBackground(new SaveCallback() {
+					
+					@Override
+					public void done(ParseException exp) {
+
+						if(exp == null){
+							JSONObject ret = getCurrentUser();
+							Log.d(TAG, "save success");
+							callbackContext.success(ret);
+						}
+						else{
+						
+							Log.d(TAG, "save failed" + exp.getMessage());
+			    	    	callbackContext.error(exp.getMessage());
+						}
+					}
+				});
+			}
+		});
+		
+		req.executeAsync();
 	}
 	
 	private void updateUser(JSONObject arg_object, final CallbackContext callbackContext){
