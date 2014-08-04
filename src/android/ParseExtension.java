@@ -225,6 +225,7 @@ public class ParseExtension extends CordovaPlugin {
 					jsonAns.put("id", answer.getString("objectId"));
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
+					jsonAns.put("voters", answer.getJSONArray("voters"));
 					
 					jsonQ.put("answer1", jsonAns);
 				}
@@ -236,6 +237,7 @@ public class ParseExtension extends CordovaPlugin {
 					jsonAns.put("id", answer.getString("objectId"));
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
+					jsonAns.put("voters", answer.getJSONArray("voters"));
 					
 					jsonQ.put("answer2", jsonAns);
 				}
@@ -247,6 +249,7 @@ public class ParseExtension extends CordovaPlugin {
 					jsonAns.put("id", answer.getString("objectId"));
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
+					jsonAns.put("voters", answer.getJSONArray("voters"));
 					
 					jsonQ.put("answer3", jsonAns);
 				}
@@ -258,6 +261,7 @@ public class ParseExtension extends CordovaPlugin {
 					jsonAns.put("id", answer.getString("objectId"));
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
+					jsonAns.put("voters", answer.getJSONArray("voters"));
 					
 					jsonQ.put("answer4", jsonAns);
 				}
@@ -269,6 +273,7 @@ public class ParseExtension extends CordovaPlugin {
 					jsonAns.put("id", answer.getString("objectId"));
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
+					jsonAns.put("voters", answer.getJSONArray("voters"));
 					
 					jsonQ.put("answer5", jsonAns);
 				}
