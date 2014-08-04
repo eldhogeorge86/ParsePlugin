@@ -208,12 +208,12 @@ public class ParseExtension extends CordovaPlugin {
 			JSONArray array = new JSONArray();
 			for (ParseObject question : qList) {
 				JSONObject jsonQ = new JSONObject();
-				jsonQ.put("id", question.getString("objectId"));
+				jsonQ.put("id", question.getObjectId());
 				jsonQ.put("data", question.getString("data"));
 				
 				ParseObject user = question.getParseObject("user");
 				JSONObject jsonUser = new JSONObject();
-				jsonUser.put("id", user.getString("objectId"));
+				jsonUser.put("id", user.getObjectId());
 				jsonUser.put("name", user.getString("name"));
 				
 				jsonQ.put("user", jsonUser);
@@ -222,7 +222,7 @@ public class ParseExtension extends CordovaPlugin {
 					ParseObject answer = question.getParseObject("answer1");
 					JSONObject jsonAns = new JSONObject();
 					
-					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("id", answer.getObjectId());
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
 					jsonAns.put("voters", answer.getJSONArray("voters"));
@@ -234,7 +234,7 @@ public class ParseExtension extends CordovaPlugin {
 					ParseObject answer = question.getParseObject("answer2");
 					JSONObject jsonAns = new JSONObject();
 					
-					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("id", answer.getObjectId());
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
 					jsonAns.put("voters", answer.getJSONArray("voters"));
@@ -246,7 +246,7 @@ public class ParseExtension extends CordovaPlugin {
 					ParseObject answer = question.getParseObject("answer3");
 					JSONObject jsonAns = new JSONObject();
 					
-					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("id", answer.getObjectId());
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
 					jsonAns.put("voters", answer.getJSONArray("voters"));
@@ -258,7 +258,7 @@ public class ParseExtension extends CordovaPlugin {
 					ParseObject answer = question.getParseObject("answer4");
 					JSONObject jsonAns = new JSONObject();
 					
-					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("id", answer.getObjectId());
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
 					jsonAns.put("voters", answer.getJSONArray("voters"));
@@ -270,7 +270,7 @@ public class ParseExtension extends CordovaPlugin {
 					ParseObject answer = question.getParseObject("answer5");
 					JSONObject jsonAns = new JSONObject();
 					
-					jsonAns.put("id", answer.getString("objectId"));
+					jsonAns.put("id", answer.getObjectId());
 					jsonAns.put("text", answer.getString("text"));
 					jsonAns.put("count", answer.getInt("count"));
 					jsonAns.put("voters", answer.getJSONArray("voters"));
