@@ -13,6 +13,7 @@ import com.facebook.Request.GraphUserCallback;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
@@ -147,6 +148,18 @@ public class ParseExtension extends CordovaPlugin {
 		            public void run() {
 		            	
 		            	isFbLinked(callbackContext);
+		            }
+		        });
+				
+				return true;
+			}
+			
+			if (action.equals("voteAnswer")) {
+				final JSONObject arg_object = args.getJSONObject(0);
+				cordova.getThreadPool().execute(new Runnable() {
+		            public void run() {
+		            	
+		            	voteAnswer(arg_object, callbackContext);
 		            }
 		        });
 				
@@ -562,6 +575,47 @@ public class ParseExtension extends CordovaPlugin {
 			});
 
     	} catch (JSONException e1) {
+    		Log.d(TAG, "JSONException" + e1.getMessage());
+	    	callbackContext.error(e1.getMessage());
+		}
+	}
+	
+	private void voteAnswer(JSONObject arg_object, final CallbackContext callbackContext){
+		try {
+			
+			String ans_id = arg_object.getString("ans_id");
+			final String user_id = arg_object.getString("user_id");
+			
+			ParseQuery<ParseObject> query = ParseQuery.getQuery("Answer");
+			 
+			// Retrieve the object by id
+			query.getInBackground(ans_id, new GetCallback<ParseObject>() {
+			  public void done(ParseObject ansObject, ParseException e) {
+			    if (e == null) {
+
+			    	ansObject.increment("count");
+			    	ansObject.addUnique("voters", user_id);
+			    	ansObject.saveInBackground(new SaveCallback() {
+						
+						@Override
+						public void done(ParseException exp) {
+							if(exp == null){
+								Log.d(TAG, "answer updated");
+								callbackContext.success();
+							}else{
+								Log.d(TAG, "ParseException" + exp.getMessage());
+						    	callbackContext.error(exp.getMessage());
+							}
+						}
+					});
+			    }else{
+			    	Log.d(TAG, "ParseException" + e.getMessage());
+			    	callbackContext.error(e.getMessage());
+			    }
+			  }
+			});
+			
+		}catch (JSONException e1) {
     		Log.d(TAG, "JSONException" + e1.getMessage());
 	    	callbackContext.error(e1.getMessage());
 		}
